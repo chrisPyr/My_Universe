@@ -6,7 +6,7 @@ PYTHON=python3
 SRC=lib/*
 
 
-.PHONY:clean all test
+.PHONY:clean all test target
 #all:$(SRC).*.so
 #
 #

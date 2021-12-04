@@ -2,11 +2,12 @@
 #define PLANET_HPP
 
 #include <cstddef>
-#include <vector>
 #include <string>
+#include <vector>
 
 class Planet {
-using vec_dou = std::vector<double>;
+  using vec_dou = std::vector<double>;
+
 private:
   std::string m_name;
   double m_mass;
@@ -18,10 +19,10 @@ public:
   Planet(std::string name, double mass, vec_dou pos, vec_dou veloc, vec_dou acc)
       : m_name{name}, m_mass{mass}, m_pos{pos}, m_veloc{veloc}, m_acc{acc} {}
   ~Planet() = default;
-  std::string name(){  return m_name;};
-  double mass() {return  m_mass;};
-  std::vector<double> pos() {return m_pos;};
-  std::vector<double> veloc() {return m_veloc;};
-  std::vector<double> acc() {return m_acc;};
+  std::string name() { return m_name; };
+  double mass() { return m_mass; };
+  std::vector<double> &pos() { return m_pos; };
+  std::vector<double> &veloc() { return m_veloc; };
+  std::vector<double> &acc() { return m_acc; };
 };
 #endif
