@@ -42,12 +42,14 @@ void ODE::naiveUpdate(SolarSys &sys) {
   for (size_t idx = 0; idx < sys.size(); ++idx) {
     x_vec_sum = 0.0;
     y_vec_sum = 0.0;
+    (sys(idx).pos())[0] += ((sys(idx).veloc())[0] * time_interval);
+    (sys(idx).pos())[1] += ((sys(idx).veloc())[1] * time_interval);
     for (size_t vec = 0; vec < sys.size(); ++vec) {
       x_vec_sum += (vec_table[idx * sys.size() + vec]).first;
       y_vec_sum += (vec_table[idx * sys.size() + vec]).second;
     }
-    (sys(idx).pos())[0] += (x_vec_sum * time_interval);
-    (sys(idx).pos())[1] += (y_vec_sum * time_interval);
+    //(sys(idx).pos())[0] += (x_vec_sum * time_interval);
+    //(sys(idx).pos())[1] += (y_vec_sum * time_interval);
     (sys(idx).veloc())[0] = x_vec_sum;
     (sys(idx).veloc())[1] = y_vec_sum;
   }
