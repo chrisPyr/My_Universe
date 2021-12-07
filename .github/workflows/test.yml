@@ -19,5 +19,4 @@ jobs:
                 python3-numpy
       - name: test
         run: |
-            cd My_universe/
             make test
