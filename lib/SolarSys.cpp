@@ -61,6 +61,5 @@ PYBIND11_MODULE(_system, m) {
            [](SolarSys &sys, size_t index) { return sys(index); });
   py::class_<ODE>(m, "ODE")
       .def(py::init<>())
-      .def("naiveUpdate", &ODE::naiveUpdate)
       .def("update", &ODE::update);
 }
