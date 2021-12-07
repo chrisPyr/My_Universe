@@ -43,8 +43,7 @@ if __name__=="__main__":
             method = input()
             print("Please enter how long you want to predict in terms of seconds")
             time_sec = input()
-            if method == '1':
-                ODEsolver.update(universe,time_sec)
+            ODEsolver.update(universe,int(time_sec),int(method))
         elif choice == '5':
             exit()
         else:

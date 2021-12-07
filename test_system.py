@@ -52,7 +52,7 @@ class SystemTest(unittest.TestCase):
         solarsystem.addPlanet(Uranus)
         solarsystem.addPlanet(Neptune)
         ode_solver = _system.ODE()
-        ode_solver.update(solarsystem, 86400)
+        ode_solver.update(solarsystem, 86400, 1)
         print(solarsystem[0].pos())
         print(solarsystem[1].pos())
 
