@@ -12,8 +12,8 @@ jobs:
           fetch-depth: 1
       - name: dependency (ubuntu)
         run:
-            sudo apt -q update
-            sudo apt -qy install \
+            sudo apt update
+            sudo apt install \
                 curl build-essential make cmake gcc \
                 g++ python3 python3-pip python3-pytest \
                 python3-numpy
