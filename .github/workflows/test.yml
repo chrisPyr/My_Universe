@@ -1,0 +1,23 @@
+name: system test
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - name: dependency (ubuntu)
+        run:
+            sudo apt -q update
+            sudo apt -qy install \
+                curl build-essential make cmake gcc \
+                g++ python3 python3-pip python3-pytest \
+                python3-numpy
+      - name: test
+        run:
+            cd My_universe/
+            make test
