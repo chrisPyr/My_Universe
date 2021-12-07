@@ -11,13 +11,13 @@ jobs:
         with:
           fetch-depth: 1
       - name: dependency (ubuntu)
-        run:
+        run: |
             sudo apt update
             sudo apt install \
                 curl build-essential make cmake gcc \
                 g++ python3 python3-pip python3-pytest \
                 python3-numpy
       - name: test
-        run:
+        run: |
             cd My_universe/
             make test
