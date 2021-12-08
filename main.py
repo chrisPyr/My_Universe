@@ -25,7 +25,7 @@ if __name__=="__main__":
             Mars = _system.Planet("Mars", 6.4171e23, [-2.350376219138694E+08,-6.689900019557889E+07], [7.614516774239974E+00,-2.122271557472923E+01], [0,0])
             Mercury = _system.Planet("Mercury", 3.302e23, [4.415286198775838E+07,2.022626858016598E+07],[-2.881504773059919E+01,4.685685655172608E+01 ], [0,0])
             Venus = _system.Planet("Venus", 48.685e23, [ 8.711143515075828E+07,-6.282813161880022E+07 ], [2.020064031332229E+01,2.829443154025286E+01],[0,0])
-            Jupiter = _system.Planet("Jupiter", 1.898e27, [6.579320580151826E+08, -3.563111248294134E+08], [6.063642398054531E+00, 1.210338130121029E+01], [0,1])
+            Jupiter = _system.Planet("Jupiter", 1.898e27, [6.579320580151826E+08, -3.563111248294134E+08], [6.063642398054531E+00, 1.210338130121029E+01], [0,0])
             Saturn = _system.Planet("Saturn", 5.6834e26, [9.939373926025440E+08,-1.103416794862963E+09], [6.637947450410307E+00,6.443751326726574E+00],[0,0])
             Uranus = _system.Planet("Uranus", 86.813e24, [2.185632308223678E+09,1.983667767025198E+09 ], [-4.626811360457690E+00,4.725512851127284E+00 ],[0,0])
             Neptune = _system.Planet("Neptune", 102.409e24, [4.426617174374252E+09,-6.498004322596612E+08 ], [7.533906069327845E-01,5.410577196004814E+00 ], [0,0])
@@ -38,12 +38,38 @@ if __name__=="__main__":
             universe.addPlanet(Jupiter)
             universe.addPlanet(Uranus)
             universe.addPlanet(Neptune)
+        elif choice == '2':
+            print("Please enter the name of planet")
+            name = input()
+            print("Please enter the mass of planet")
+            mass = input()
+            print("Please enter the initial position(x, y) of planet")
+            pos =[]
+            pos_x = input()
+            pos_y = input()
+            pos.append(int(pos_x))
+            pos.append(int(pos_y))
+            print("Please enter the initial velocity(x, y) of planet")
+            vec =[]
+            vec_x = input()
+            vec_y = input()
+            vec.append(int(pos_x))
+            vec.append(int(pos_y))
+            user_planet = _system.Planet(name,int(mass),pos,vec,[0,0])
+            universe.addPlanet(user_planet)
+
+        elif choice == '3':
+            print("Please enter the name of the planet")
+            name = input()
+            universe.rmPlanet(name)
         elif choice == '4':
             print("Please select method, 1 for Euler method, 2 for Runge Kutta")
             method = input()
             print("Please enter how long you want to predict in terms of seconds")
             time_sec = input()
             ODEsolver.update(universe,int(time_sec),int(method))
+            print(universe[0].pos())
+            print(universe[1].pos())
         elif choice == '5':
             exit()
         else:
