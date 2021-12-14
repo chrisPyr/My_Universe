@@ -42,8 +42,8 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(_system, m) {
   py::class_<Planet>(m, "Planet")
-      .def(py::init<std::string, double, std::vector<double>,
-                    std::vector<double>, std::vector<double>>())
+      .def(py::init<std::string, long double, std::vector<long double>,
+                    std::vector<long double>, std::vector<long double>>())
       .def("name", &Planet::name)
       .def("mass", &Planet::mass)
       .def("veloc", &Planet::veloc)
@@ -59,7 +59,5 @@ PYBIND11_MODULE(_system, m) {
       .def("updatePos", &SolarSys::updatePos)
       .def("__getitem__",
            [](SolarSys &sys, size_t index) { return sys(index); });
-  py::class_<ODE>(m, "ODE")
-      .def(py::init<>())
-      .def("update", &ODE::update);
+  py::class_<ODE>(m, "ODE").def(py::init<>()).def("update", &ODE::update);
 }
