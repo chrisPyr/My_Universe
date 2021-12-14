@@ -3,9 +3,9 @@
 
 #include "Planet.hpp"
 #include <cstddef>
+#include <stdexcept>
 #include <string>
 #include <vector>
-#include <stdexcept>
 
 class SolarSys {
 private:
