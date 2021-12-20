@@ -1,5 +1,6 @@
 #!/usr/bin/env/ python3
 import _system
+import time
 
 
 if __name__=="__main__":
@@ -67,7 +68,10 @@ if __name__=="__main__":
             method = input()
             print("Please enter how long you want to predict in terms of seconds")
             time_sec = input()
+            start_time = time.time()
             ODEsolver.update(universe,int(time_sec),int(method))
+            end_time = time.time()
+            print("time elapsed : {}".format(end_time - start_time))
             print(universe[0].pos())
             print(universe[1].pos())
         elif choice == '5':

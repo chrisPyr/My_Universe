@@ -1,5 +1,5 @@
-CXX=clang++
-CXXFLAGS=-std=c++17 -O3 -Wall -Wextra -fPIC -shared -m64
+CXX=g++
+CXXFLAGS=-std=c++17 -O3 -Wall -Wextra -fPIC -shared -m64 -fopenmp -g
 INCLUDE=-Iinclude/
 PYTHON=python3
 SRC=lib/*

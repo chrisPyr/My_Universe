@@ -8,6 +8,6 @@ private:
   void RungeKutta(SolarSys &sys);
 
 public:
-  void update(SolarSys &sys, size_t itr, size_t method);
+  void update(SolarSys &sys, long long itr, size_t method);
 };
 #endif

@@ -7,16 +7,16 @@
 #include <utility>
 
 const long double G = 6.67408e-20L;
-const long double time_interval = 1;
+const long double time_interval = 100;
 
-void ODE::update(SolarSys &sys, size_t itr, size_t method) {
-  const size_t itr_step = 1 / time_interval;
+void ODE::update(SolarSys &sys, long long itr, size_t method) {
+  const long double itr_step = 1 / time_interval;
   if (1 == method) {
-    for (size_t i = 0; i < itr * itr_step; ++i) {
+    for (long long i = 0; i < itr * itr_step; ++i) {
       Euler(sys);
     }
   } else if (2 == method) {
-    for (size_t i = 0; i < itr * itr_step; ++i) {
+    for (long long i = 0; i < itr * itr_step; ++i) {
       RungeKutta(sys);
     }
   } else {
@@ -30,6 +30,8 @@ void ODE::Euler(SolarSys &sys) {
   long double delta_y = 0.0;
   auto vec_table = std::make_unique<std::pair<long double, long double>[]>(
       sys.size() * sys.size());
+
+//#pragma omp parallel for private(delta_x, delta_y)
   for (size_t x = 0; x < sys.size(); ++x) {
     for (size_t y = 0; y < sys.size(); ++y) {
       if (x == y) {
@@ -48,8 +50,11 @@ void ODE::Euler(SolarSys &sys) {
     }
   }
 
+
   long double x_vec_sum = 0.0;
   long double y_vec_sum = 0.0;
+
+//#pragma omp parallel for private(x_vec_sum, y_vec_sum)
   for (size_t idx = 0; idx < sys.size(); ++idx) {
     x_vec_sum = 0.0;
     y_vec_sum = 0.0;
@@ -156,6 +161,9 @@ SolarSys RK4Step_sub(SolarSys sys_rep, SolarSys base, size_t type){
   auto acc_table = std::make_unique<std::pair<long double, long double>[]>(
       system_size * system_size);
 
+//#pragma omp parallel
+//  {
+//#pragma omp parallel for private(delta_x, delta_y) collapse(2)
   for (size_t x = 0; x < system_size; ++x) {
     for (size_t y = 0; y < system_size; ++y) {
       const size_t index = x * system_size + y;
@@ -174,6 +182,7 @@ SolarSys RK4Step_sub(SolarSys sys_rep, SolarSys base, size_t type){
           (G * (sys_rep(y).mass()) / r * (delta_y / std::sqrt(r)));
     }
   }
+//#pragma omp for
   //compute kx, ky
   for(size_t x = 0; x < system_size; ++x){
     sys_rep(x).veloc()[0] = base(x).veloc()[0] + sys_rep(x).acc()[0] * time_in;
@@ -181,6 +190,7 @@ SolarSys RK4Step_sub(SolarSys sys_rep, SolarSys base, size_t type){
   }
 
   long double x_acc_sum, y_acc_sum;
+//#pragma omp for private(x_acc_sum, y_acc_sum)
   for (size_t idx = 0; idx < system_size; ++idx) {
     x_acc_sum = 0.0;
     y_acc_sum = 0.0;
@@ -192,6 +202,7 @@ SolarSys RK4Step_sub(SolarSys sys_rep, SolarSys base, size_t type){
     (sys_rep(idx).acc())[0] = x_acc_sum;
     (sys_rep(idx).acc())[1] = y_acc_sum;
   }
+//}
 
   return sys_rep;
 }
@@ -270,20 +281,14 @@ void ODE::RungeKutta(SolarSys &sys) {
     (sys(idx).acc())[0] = x_acc_sum;
     (sys(idx).acc())[1] = y_acc_sum;
   }
+  std::cout.precision(17);
 
   SolarSys k1 = sys; //k1x, k1y, k1vx, k1vy
   SolarSys k2 = RK4Step_sub(k1,sys,1); //k2x, k2y, k2vx, k2vy
-  for (size_t i = 0; i < sys.size(); ++i) {
-    (k2(i).pos())[0] = (k1(i).pos())[0];
-    (k2(i).pos())[1] = (k1(i).pos())[1];
-  }
   SolarSys k3 = RK4Step_sub(k2,sys,1); //k3x, k3y, k3vy, k3vy
-  for (size_t i = 0; i < sys.size(); ++i) {
-    (k3(i).pos())[0] = (k1(i).pos())[0];
-    (k3(i).pos())[1] = (k1(i).pos())[1];
-  }
-  SolarSys k4 = RK4Step_sub(k3,sys,2); //k3x, k3y, k3vy, k3vy
+  SolarSys k4 = RK4Step_sub(k3,sys,2); //k4x, k4y, k4vy, k4vy
 
+//#pragma omp parallel for
   for (size_t i = 0; i < sys.size(); ++i) {
     (sys(i).pos())[0] += ((k1(i).veloc())[0] + 2 * (k2(i).veloc())[0] +
                           2 * (k3(i).veloc())[0] + (k4(i).veloc())[0]) *
