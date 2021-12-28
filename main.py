@@ -1,6 +1,7 @@
 #!/usr/bin/env/ python3
 import _system
 import time
+from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FuncAnimation
@@ -20,14 +21,31 @@ def init():
     return
 
 def update(i):
-#    ODEsolver.update(universe, 0, int(method))
     fig1.clear()
     init()
     system_size = universe.size()
     for k in range(universe.size()):
-        fig1.scatter(positions[system_size*i +k][0], positions[system_size*i+k][1],positions[system_size*i+k][2], color = color[k])
-        #fig1.annotate(name_of_solar[k],(positions[system_size*i +k][0],positions[system_size*i+k][1],positions[system_size*i+k][2]) )
-        fig1.text(positions[system_size*i +k][0],positions[system_size*i+k][1],positions[system_size*i+k][2], name_of_solar[k] )
+        fig1.scatter(vec_positions[0][system_size*i +k][0], vec_positions[0][system_size*i+k][1],vec_positions[0][system_size*i+k][2], color = color[k])
+        fig1.text(vec_positions[0][system_size*i +k][0],vec_positions[0][system_size*i+k][1],vec_positions[0][system_size*i+k][2], name_of_solar[k] )
+    return
+
+def outputTXT():
+    d0 = datetime(2021,10,11)
+    system_size = universe.size()
+    for k in range(system_size):
+        file_name = "Orbit_Simu_"+universe[k].name()+"_"+method_type+".txt"
+        with open(file_name,"w") as file:
+            #wrtie name and mass
+            file.write("Name: "+universe[k].name()+"\n"+"Mass:"+str(universe[k].mass())+"\n")
+            file.write("*" * 70 + "\n")
+            current_day = d0
+            for i in range(int(int(time_sec)/86400)+1):
+                pos = vec_positions[0][system_size*i +k]
+                vec = vec_positions[1][system_size*i +k]
+                file.write(str(current_day+timedelta(days=i))+'\n')
+                file.write("X  = {:.10e} Y  = {:.10e} Z  = {:.10e}\n".format(pos[0], pos[1], pos[2]))
+                file.write("VX = {:.10e} VY = {:.10e} VZ = {:.10e}\n".format(vec[0], vec[1], vec[2]))
+            file.write("=" * 70+'\n')
     return
 
 if __name__=="__main__":
@@ -94,18 +112,23 @@ if __name__=="__main__":
         elif choice == '4':
             print("Please select method, 1 for Euler method, 2 for Runge Kutta")
             method = input()
+            if method == '1':
+                method_type = "Euler"
+            else:
+                method_type = "Runge_Kutta"
             print("Please enter how long you want to predict in terms of seconds")
             time_sec = input()
             start_time = time.time()
-            positions = ODEsolver.update(universe,int(time_sec),int(method))
-            print("solved")
-            ani = FuncAnimation(fig, update, frames=366, init_func=init, interval = 1, repeat = False, save_count = 366)
-            print("start output gif")
-            ani.save("test.gif", fps = 30)
+            vec_positions = ODEsolver.update(universe,int(time_sec),int(method))
             end_time = time.time()
             print("time elapsed : {}".format(end_time - start_time))
-            print(universe[0].pos())
-            print(universe[3].pos())
+            print("solved")
+            ani = FuncAnimation(fig, update, frames=int(int(time_sec)/86400)+1, init_func=init, interval = 1, repeat = False, save_count = 366)
+            print("Start output gif")
+            gif_name = "system_"+method_type+".gif"
+            ani.save(gif_name, fps = 30)
+            print("Start outputing txt file")
+            outputTXT()
         elif choice == '5':
             exit()
         else:
