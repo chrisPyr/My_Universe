@@ -10,10 +10,10 @@ class Planet {
 
 private:
   std::string m_name;
-  long double m_mass;
-  vec_dou m_pos;
-  vec_dou m_veloc; // velocity along x, y axis
-  vec_dou m_acc;   // accelerate along x, y axis
+  long double m_mass; //mass of planet
+  vec_dou m_pos; // position on x, y, z axis
+  vec_dou m_veloc; // velocity along x, y, z axis
+  vec_dou m_acc;   // accelerate along x, y, z axis
 
 public:
   Planet(std::string name, double mass, vec_dou pos, vec_dou veloc, vec_dou acc)

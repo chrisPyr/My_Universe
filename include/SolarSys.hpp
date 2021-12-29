@@ -10,7 +10,7 @@
 class SolarSys {
 private:
   using vec_planet = std::vector<Planet>;
-  vec_planet m_planets;
+  vec_planet m_planets; // all planets in this system
 
 public:
   /* Remember rule of five!!*/
